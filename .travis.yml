@@ -1,0 +1,35 @@
+git:
+  depth: false
+
+notifications:
+  email: false
+
+language: java
+jdk: openjdk8
+
+env:
+  global:
+    - TERM=dumb
+
+addons:
+  apt:
+    packages:
+      - bash
+      - curl
+      - jq
+      - unzip
+      - python-pip
+
+install: true
+before_install:
+  - sudo pip install httpie >/dev/null 2>&1
+  - source <(curl -s https://raw.githubusercontent.com/daggerok/bash-functions/master/main.bash)
+  - stop_any 80 8080 >/dev/null
+
+script:
+  - ./gradlew clean build
+  - unzip build/distributions/kotlin-undertow.zip -d build
+  - bash build/kotlin-undertow/bin/kotlin-undertow &
+  - wait_for 8080
+  - http :8080
+  - stop_any 80 8080
