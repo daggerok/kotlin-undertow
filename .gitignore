@@ -1,8 +1,8 @@
 .gradle
 .idea
-.iml
-.ipr
-.iwd
-.log
+*.iml
+*.ipr
+*.iwd
+*.log*
 build
 /out/
